@@ -25,15 +25,28 @@ And then execute:
 
     $ bundle
 ### Registering metrics on server process start
-Depending on your activejob adapter the installation process may be different for you. If using sidekiq:
+Depending on your activejob adapter the installation process may be different for you.
+
+If using with [sidekiq](https://github.com/sidekiq/sidekiq):
 ```ruby
-# config/initializers/sidekiq or elsewhere
+# config/initializers/sidekiq.rb or elsewhere
 Sidekiq.configure_server do |_config|
-    Yabeda::ActiveJob.install!
+  Yabeda::ActiveJob.install!
 end
 ```
 
-If using with resque:
+If using with [solid-queue](https://github.com/rails/solid_queue/):
+```ruby
+# config/initializers/solid_queue.rb or elsewhere
+Yabeda::ActiveJob.install!
+
+SolidQueue.on_start do
+  # Start your metrics server f.e.:
+  # Yabeda::Prometheus::Exporter.start_metrics_server!
+end
+```
+
+If using with [resque](https://github.com/resque/resque):
 ```ruby
 # config/initializers/yabeda.rb or elsewhere
 Yabeda::ActiveJob.install!
